@@ -8,7 +8,7 @@ namespace CarRace
 {
     internal class Car
     {
-        int warp = 10; // Spee factor 
+        int timeFactor = 10;  // Time factor 
 
         public string CarName { get; set; }
         private int MaxSpeed { get; set; } = 120;
@@ -17,51 +17,36 @@ namespace CarRace
 
         public ConsoleColor Color { get; set; }
 
+        public int displayPos { get; set; } 
+
 
         public decimal TraveledDistance { get; set; } = 0;
 
-        public Car(string name, ConsoleColor color = ConsoleColor.White){
+        public Car(string name, ConsoleColor color = ConsoleColor.White, int displayPos = 0)
+        {
             CarName = name;
-            
+
             Color = color;
+            this.displayPos = displayPos;
         }
 
         //Events
         public async Task RunOutOfFuel()
         {
-            decimal temp = CurrentSpeed;    
 
-            Console.WriteLine($"{CarName} Out of fuel +30sek");
-            CurrentSpeed = 0;
-            await Task.Delay(30000 / warp);
+            await TimeOut(30, "Out of fuel +30sek");
 
-            CurrentSpeed = temp;
-           
+
         }
 
         public async Task FlatTire()
         {
-            decimal temp = CurrentSpeed;    
-
-            CurrentSpeed = 0;
-
-            Console.WriteLine($"{CarName} Flat tire +20sek");
-            await Task.Delay(20000 / warp);
-            CurrentSpeed = temp;
-
-
+            await TimeOut(20, "Flat tire +20sek");
         }
 
         public async Task BirdStrike()
         {
-            decimal temp = CurrentSpeed;
-
-            CurrentSpeed = 0;
-
-            Console.WriteLine($"Bird strike! {CarName} + 10sek");
-                await Task.Delay(10000 / warp);
-            CurrentSpeed = temp;
-
+            await TimeOut(10, "Bird strike, +10 sek");
 
         }
 
@@ -74,12 +59,13 @@ namespace CarRace
             
         }
 
-        public void TimeOut(int Time)
+        public async Task TimeOut(int Time, string eventDesc)
         {
             decimal temp = CurrentSpeed;
 
             CurrentSpeed = 0;
-            Task.Delay(Time / warp);
+            Console.WriteLine($"{CarName} {eventDesc}");
+            await Task.Delay((Time * 1000) / timeFactor);
             CurrentSpeed = temp;
 
         }
@@ -89,20 +75,19 @@ namespace CarRace
         public void Drive()
         {
             int timeLapsed = 0;
-            int totalTime = 0;
-
+            double totalTime = 0;
             
             
             
 
             bool running = true;
-
+            //Console.WriteLine("Hej " + CarName );
             while (running)
             {
-                Console.CursorTop = 0;
+
 
                 // km/h
-                if(CurrentSpeed != 0)
+                if (CurrentSpeed != 0)
                 {
 
                     CurrentSpeed = MaxSpeed;
@@ -110,22 +95,31 @@ namespace CarRace
                 decimal distancePerSecond = CurrentSpeed / 3600;
                 decimal displayDistance = Math.Round(TraveledDistance, 5);
 
-                Console.WriteLine($"Speed:{CurrentSpeed} Distance: {displayDistance}km");
-                Thread.Sleep(1000 / warp);
+                //Console.WriteLine($"{CarName} Speed:{CurrentSpeed} Distance: {displayDistance}km");
+                Thread.Sleep(1000 / timeFactor);
 
 
-                //Console.BackgroundColor = Color;
-                //30sec?
-                if(timeLapsed == 30)
+                if(totalTime == 0)
                 {
-                    Console.CursorTop = 5;
+                    RandomEvent();
+                }
+
+                //30sec?
+                if (timeLapsed == 30)
+                {
+                    //Console.Clear();
+                    
+
 
                     timeLapsed = 0;
-                    Console.WriteLine("30 sek");
-                    Console.WriteLine("Distance:" + displayDistance + " km? " + CurrentSpeed);
+                    //Console.ForegroundColor = Color;
+                    Console.SetCursorPosition(0, 0 + displayPos);
+                    Console.WriteLine(CarName + " Distance:" + displayDistance + " km? " + CurrentSpeed + " ");
                     //Console.ReadLine();
 
                     //Event
+                    //Console.CursorTop = -1;
+                    //Console.CursorLeft = 30;
                     RandomEvent();
 
 
@@ -137,7 +131,18 @@ namespace CarRace
                 TraveledDistance += distancePerSecond;
 
 
+                if(TraveledDistance >= 10)
+                {
+                    var timeSpan = TimeSpan.FromSeconds(totalTime);
+                    int hh = timeSpan.Hours;
+                    int mm = timeSpan.Minutes;
+                    int ss = timeSpan.Seconds;
 
+                    //Console.WriteLine($"Finish in time: {Math.Round((totalTime / 60),2)} minutes");
+                    Console.WriteLine($"Finish in time: {mm}:{ss} minutes");
+                    running = false;
+                }
+                //Console.SetCursorPosition(0, 0);
 
 
             }
@@ -145,7 +150,13 @@ namespace CarRace
 
         }
 
-        public void Start()
+        public async Task Text(string text)
+        {
+            Console.SetCursorPosition(0, 0 + displayPos);
+            Console.WriteLine(text);
+        }
+
+        public async Task Start()
         {
             CurrentSpeed = MaxSpeed;
             Console.WriteLine($"{CarName} started");
