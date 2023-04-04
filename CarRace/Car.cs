@@ -72,7 +72,7 @@ namespace CarRace
 
 
 
-        public void Drive()
+        public async Task Drive()
         {
             int timeLapsed = 0;
             double totalTime = 0;
@@ -99,22 +99,23 @@ namespace CarRace
                 Thread.Sleep(1000 / timeFactor);
 
 
-                if(totalTime == 0)
-                {
-                    RandomEvent();
-                }
+                //if(totalTime == 0)
+                //{
+                //    RandomEvent();
+                //}
 
                 //30sec?
                 if (timeLapsed == 30)
                 {
-                    //Console.Clear();
+                    Console.Clear();
                     
 
 
                     timeLapsed = 0;
+                    //await Text(CarName + " Distance:" + displayDistance + " km? " + CurrentSpeed + " ");
                     //Console.ForegroundColor = Color;
-                    Console.SetCursorPosition(0, 0 + displayPos);
-                    Console.WriteLine(CarName + " Distance:" + displayDistance + " km? " + CurrentSpeed + " ");
+                    //Console.SetCursorPosition(0, 0 + displayPos);
+                    //Console.WriteLine(CarName + " Distance:" + displayDistance + " km? " + CurrentSpeed + " ");
                     //Console.ReadLine();
 
                     //Event
@@ -139,8 +140,10 @@ namespace CarRace
                     int ss = timeSpan.Seconds;
 
                     //Console.WriteLine($"Finish in time: {Math.Round((totalTime / 60),2)} minutes");
-                    Console.WriteLine($"Finish in time: {mm}:{ss} minutes");
+                    await Text($"Finish in time: {mm}:{ss} minutes");
+                    //Console.WriteLine($"Finish in time: {mm}:{ss} minutes");
                     running = false;
+
                 }
                 //Console.SetCursorPosition(0, 0);
 
@@ -152,8 +155,10 @@ namespace CarRace
 
         public async Task Text(string text)
         {
+            Console.ForegroundColor = Color;
             Console.SetCursorPosition(0, 0 + displayPos);
             Console.WriteLine(text);
+            Console.ResetColor();
         }
 
         public async Task Start()
@@ -166,6 +171,7 @@ namespace CarRace
 
         public async Task RandomEvent()
         {
+            Console.SetCursorPosition(0, 0 + displayPos);
 
             Random rand = new Random();
             int randomNumber = rand.Next(49);

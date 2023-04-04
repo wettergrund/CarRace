@@ -2,10 +2,10 @@
 {
     internal class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
 
-            await RunRace();
+            RunRace();
 
             
 
@@ -15,20 +15,24 @@
 
         static async Task RunRace()
         {
-
+     
             Car car1 = new Car("Volvo", ConsoleColor.Blue, 0);
-            Car car2 = new Car("BMW", ConsoleColor.Red, 20);
+            Car car2 = new Car("BMW", ConsoleColor.Red, 0);
+
 
             List<Car> firstCar = new List<Car>{ car1, car2 };
             Parallel.ForEach( firstCar , car =>
             {
                 car.Start();
+                
+
             });
+
             //var secondCar = ;
 
             //var raceTasks = new List<Task> { firstCar, secondCar };
 
-            
+
 
             //Random();
 
