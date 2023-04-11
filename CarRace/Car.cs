@@ -11,18 +11,24 @@ namespace CarRace
         int timeFactor = 10;  // Time factor 
 
         public string CarName { get; set; }
-        private int MaxSpeed { get; set; } = 120;
+        public int MaxSpeed { get; set; } = 120;
 
         public decimal CurrentSpeed { get; set; }
 
         public ConsoleColor Color { get; set; }
 
-        public int displayPos { get; set; } 
+        public int displayPos { get; set; }
 
+        public double TotalTime { get; set; }
 
         public decimal TraveledDistance { get; set; } = 0;
 
-        public Car(string name, ConsoleColor color = ConsoleColor.White, int displayPos = 0)
+        public decimal DisplayDistance { get { return Math.Round(TraveledDistance, 2); } }
+
+
+        public string LastEvent { get; set; }
+
+        public Car(string name, ConsoleColor color = ConsoleColor.White)
         {
             CarName = name;
 
@@ -201,6 +207,13 @@ namespace CarRace
             }
 
 
+        }
+
+        public decimal DitanceLeft()
+        {
+            decimal result = 10 - TraveledDistance; 
+        
+            return result;
         }
     }
 }
