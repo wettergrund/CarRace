@@ -9,7 +9,7 @@ namespace CarRace
     internal class Tools
     {
 
-        public static async Task TimeOut(Car car, string eventDesc, int Time)
+        public static async Task EventHandler(Car car, string eventDesc, int Time = 0)
         {
             
             decimal temp = car.CurrentSpeed;

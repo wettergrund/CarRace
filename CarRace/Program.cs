@@ -6,28 +6,35 @@
         static async Task Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-
+            Console.WriteLine("Welcome to this car race");
+            Console.WriteLine("Press any key to start");
+            Console.ReadLine();
             await RunRace();
-
+            Console.WriteLine("Race has finished, press any key to end");
+            Console.ReadLine();
         }
 
 
 
         public async static Task RunRace()
         {
+            Console.Clear();
             // Car objects
             Car car1 = new Car("Volvo", ConsoleColor.Magenta);
             Car car2 = new Car("BMW", ConsoleColor.Cyan);
+            Car car3 = new Car("SAAB", ConsoleColor.White);
 
             List<Car> carList = new List<Car>
             {
                 car1,
-                car2
+                car2,
+                car3
             };
 
             //Start race method for each car
             var firstCar = DriveRace(car1);
             var secondCar = DriveRace(car2);
+            var thirdCar = DriveRace(car3);
 
             Console.WriteLine();
             Console.WriteLine("Press Enter to get a status update");
@@ -35,7 +42,7 @@
 
             //Key listener, will show status when hit enter
             var keyListener = KeyEvent(carList);
-            var carRace = new List<Task> { firstCar, secondCar, keyListener };
+            var carRace = new List<Task> { firstCar, secondCar, thirdCar, keyListener };
 
 
             // Counter to keep track if car is first
@@ -73,6 +80,17 @@
                     Console.WriteLine($"{car2.CarName} {position} in time: {time.min}:{time.sec} minutes");
                 }
 
+                else if (finishRace == thirdCar)
+                {
+                    var time = Tools.SecondsToMinutes(car3.TotalTime);
+
+                    carsFinished++;
+
+                    ClearCurrentConsoleLine();
+                    Console.WriteLine($"{car3.CarName} {position} in time: {time.min}:{time.sec} minutes");
+                }
+
+
                 else if (finishRace == keyListener)
                 {
 
@@ -87,7 +105,6 @@
 
             }
 
-            Console.ReadLine();
 
         }
 
@@ -220,17 +237,15 @@
                         case 0:
                             // If number is 0
                             //Run out of fuel 30sek (Risk: 2%)
-
-                            string newEvent = "ran out of fuel";
-                            Tools.TimeOut(car, newEvent, 30);
-                            car.LastEvent = newEvent;
+                            Tools.EventHandler(car, "ran out of fuel", 30);
+                            car.LastEvent = "Out of fuel";
 
                             break;
                         case int n when (n >= 1 && n <= 2):
                             //If number is 1 or 2
                             //Flat tire (Risk: 4%)
 
-                            Tools.TimeOut(car, "got flat tire", 20);
+                            Tools.EventHandler(car, "got flat tire", 20);
                             car.LastEvent = "Flat tire";
 
                             break;
@@ -238,7 +253,7 @@
                             // If number is between 3 and 7
                             //Bird strike (Risk: 10%)
 
-                            Tools.TimeOut(car, "got bird strike", 10);
+                            Tools.EventHandler(car, "got bird strike", 10);
                             car.LastEvent = "Bird strike";
 
                             break;
@@ -247,6 +262,9 @@
                             //Enginge problem (Risk: 20%)
                             car.MaxSpeed--;
                             car.LastEvent = $"Engine problem, slowed down to {car.MaxSpeed}";
+
+                            Tools.EventHandler(car, "got engine problem");
+
                             break;
                         default:
                             // No problemfor the 30 sec period. (Chance: 64%)
