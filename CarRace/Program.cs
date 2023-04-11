@@ -91,7 +91,8 @@
                 {
 
                     ClearCurrentConsoleLine();
-                    Console.WriteLine("Alla bilar i mål");
+                    Console.WriteLine();
+                    Console.WriteLine("All cars have reached the finish line");
 
                 }
                 Console.ResetColor();
