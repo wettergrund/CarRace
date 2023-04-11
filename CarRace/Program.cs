@@ -54,6 +54,11 @@
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                 }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+
 
                 if (finishRace == firstCar)
                 {
@@ -90,9 +95,11 @@
                 else if (finishRace == keyListener)
                 {
 
-                    ClearCurrentConsoleLine();
+                    Console.ResetColor();
                     Console.WriteLine();
                     Console.WriteLine("All cars have reached the finish line");
+
+                
 
                 }
                 Console.ResetColor();

@@ -23,9 +23,11 @@ namespace CarRace
 
             Program.ClearCurrentConsoleLine();
 
+
+            Console.WriteLine($"{car.CarName} {eventDesc} at {time.min}:{time.sec} minutes");
+            
             await Task.Delay((Time * 1000) / timeFactor);
             
-            Console.WriteLine($"{car.CarName} {eventDesc} at {time.min}:{time.sec} minutes");
             
             car.CurrentSpeed = temp;
 
