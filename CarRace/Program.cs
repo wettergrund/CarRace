@@ -15,41 +15,29 @@
 
         public async static Task RunRace()
         {
-
+            // Car objects
             Car car1 = new Car("Volvo", ConsoleColor.Magenta);
             Car car2 = new Car("BMW", ConsoleColor.Cyan);
 
             List<Car> carList = new List<Car>
             {
                 car1,
-                car2,
-
+                car2
             };
 
-            for (int i = 0; i < carList.Count; i++)
-            {
-                if (i == 0)
-                {
-                    continue;
-                }
-                else
-                {
-
-                    carList[i].displayPos = i * 20;
-                }
-            }
-
-
+            //Start race method for each car
             var firstCar = DriveRace(car1);
             var secondCar = DriveRace(car2);
 
             Console.WriteLine("Press Enter to get a status update");
             Console.WriteLine("Race events:");
 
+            //Key listener, will show status when hit enter
             var keyListener = KeyEvent(carList);
-
             var carRace = new List<Task> { firstCar, secondCar, keyListener };
 
+
+            // Counter to keep track if car is first
             int carsFinished = 0;
 
             while (carRace.Count > 0)
@@ -72,8 +60,8 @@
                     carsFinished++;
 
                     ClearCurrentConsoleLine();
-
                     Console.WriteLine($"{car1.CarName} {position} in time: {mm}:{ss} minutes");
+
                 }
                 else if (finishRace == secondCar)
                 {
@@ -84,7 +72,6 @@
                     carsFinished++;
 
                     ClearCurrentConsoleLine();
-
                     Console.WriteLine($"{car2.CarName} {position} in time: {mm}:{ss} minutes");
                 }
 
@@ -92,16 +79,17 @@
                 {
 
                     ClearCurrentConsoleLine();
-
                     Console.WriteLine("Alla bilar i mål");
+
                 }
                 Console.ResetColor();
 
                 await finishRace;
                 carRace.Remove(finishRace);
-            }
-            Console.ReadLine();
 
+            }
+
+            Console.ReadLine();
 
         }
 
@@ -145,9 +133,16 @@
         {
             Console.SetCursorPosition(0, 10);
 
+            await Task.Delay(1);
+
+            Console.WriteLine(cars[0].TotalTime);
+
             foreach (Car car in cars)
             {
                 Console.ForegroundColor = car.Color;
+                
+                ClearCurrentConsoleLine();
+                Console.WriteLine($"{car.CarName}:");
 
                 ClearCurrentConsoleLine();
                 Console.WriteLine($"Distance: {car.DisplayDistance} km");
@@ -179,10 +174,12 @@
 
         public async static Task<Car> DriveRace(Car car)
         {
+            // Start of race
             car.CurrentSpeed = car.MaxSpeed;
             Console.WriteLine($"{car.CarName} has started");
 
-            int timeLapsed = 0;
+            //Event period to keep track of when a new event should be generated
+            int eventPeriod = 0;
 
             while (true)
             {
@@ -191,17 +188,19 @@
                 decimal distancePerSecond = car.CurrentSpeed / 3600; //km/h to km/s
 
 
+                // Reset current speed, if it's 0 it's because of current event and will not be reset.
                 if (car.CurrentSpeed != 0)
                 {
                     car.CurrentSpeed = car.MaxSpeed;
                 }
 
-                timeLapsed++;
+                //Add second for event / total time.
+                eventPeriod++;
                 car.TotalTime++;
 
+                // When car reach 10km
                 if (car.TraveledDistance >= 10)
                 {
-                    // When car reach 10km
                     return car;
                 }
 
@@ -210,10 +209,11 @@
 
 
                 //Generate an event every 30 seconds
-                if (timeLapsed == 30)
+                if (eventPeriod == 30)
                 {
-                    timeLapsed = 0;
+                    eventPeriod = 0;
 
+                    //Random number between 0 and 49.
                     Random rand = new Random();
                     int randomNumber = rand.Next(49);
 
@@ -221,29 +221,32 @@
                     switch (randomNumber)
                     {
                         case 0:
+                            // If number is 0
                             //Run out of fuel 30sek (Risk: 2%)
 
                             string newEvent = "ran out of fuel";
-                            await Event.TimeOut(car, newEvent, 30);
+                            Event.TimeOut(car, newEvent, 30);
                             car.LastEvent = newEvent;
 
                             break;
-                        case int n when (n <= 1 && n <= 2):
+                        case int n when (n >= 1 && n <= 2):
+                            //If number is 1 or 2
                             //Flat tire (Risk: 4%)
 
-                            await Event.TimeOut(car, "got flat tire", 20);
+                            Event.TimeOut(car, "got flat tire", 20);
                             car.LastEvent = "Flat tire";
 
-
                             break;
-                        case int n when (n <= 3 && n <= 7):
+                        case int n when (n >= 3 && n <= 7):
+                            // If number is between 3 and 7
                             //Bird strike (Risk: 10%)
 
-                            await Event.TimeOut(car, "got bird strike", 10);
+                            Event.TimeOut(car, "got bird strike", 10);
                             car.LastEvent = "Bird strike";
 
                             break;
-                        case int n when (n <= 8 && n <= 17):
+                        case int n when (n >= 8 && n <= 17):
+                            // If number is bewteen 8 and 17
                             //Enginge problem (Risk: 20%)
                             car.MaxSpeed--;
                             car.LastEvent = $"Engine problem, slowed down to {car.MaxSpeed}";
