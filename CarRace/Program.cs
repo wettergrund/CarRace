@@ -54,25 +54,22 @@
                 if (finishRace == firstCar)
                 {
 
-                    var timeSpan = TimeSpan.FromSeconds(car1.TotalTime);
-                    int mm = timeSpan.Minutes;
-                    int ss = timeSpan.Seconds;
+                    var time = Event.SecondsToMinutes(car1.TotalTime);
+
                     carsFinished++;
 
                     ClearCurrentConsoleLine();
-                    Console.WriteLine($"{car1.CarName} {position} in time: {mm}:{ss} minutes");
+                    Console.WriteLine($"{car1.CarName} {position} in time: {time.min}:{time.sec} minutes");
 
                 }
                 else if (finishRace == secondCar)
                 {
-
-                    var timeSpan = TimeSpan.FromSeconds(car2.TotalTime);
-                    int mm = timeSpan.Minutes;
-                    int ss = timeSpan.Seconds;
+                    var time = Event.SecondsToMinutes(car2.TotalTime);
+           
                     carsFinished++;
 
                     ClearCurrentConsoleLine();
-                    Console.WriteLine($"{car2.CarName} {position} in time: {mm}:{ss} minutes");
+                    Console.WriteLine($"{car2.CarName} {position} in time: {time.min}:{time.sec} minutes");
                 }
 
                 else if (finishRace == keyListener)
@@ -120,7 +117,7 @@
                 } while (Console.ReadKey(true).Key != ConsoleKey.Enter);
 
                 // Code if enter is pressed
-                (int Left, int Top) position = Console.GetCursorPosition();
+                var position = Console.GetCursorPosition();
 
                 await RaceStatus(cars);
 
@@ -135,6 +132,7 @@
 
             await Task.Delay(1);
 
+            ClearCurrentConsoleLine();
             Console.WriteLine(cars[0].TotalTime);
 
             foreach (Car car in cars)
