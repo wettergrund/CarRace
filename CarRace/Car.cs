@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CarRace
+﻿namespace CarRace
 {
     internal class Car
     {
@@ -18,12 +12,12 @@ namespace CarRace
 
         public decimal TraveledDistance { get; set; } = 0;
 
-        public decimal DisplayDistance 
-        { 
-            get 
-            { 
-                return Math.Round(TraveledDistance, 2); 
-            } 
+        public decimal DisplayDistance
+        {
+            get
+            {
+                return Math.Round(TraveledDistance, 2);
+            }
         }
 
 
@@ -36,12 +30,10 @@ namespace CarRace
             Color = color;
         }
 
-                
+
         public decimal DitanceLeft()
         {
-            decimal result = 10 - TraveledDistance; 
-        
-            return result;
+            return 10 - TraveledDistance;
         }
     }
 }

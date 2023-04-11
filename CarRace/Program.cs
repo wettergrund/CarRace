@@ -29,6 +29,7 @@
             var firstCar = DriveRace(car1);
             var secondCar = DriveRace(car2);
 
+            Console.WriteLine();
             Console.WriteLine("Press Enter to get a status update");
             Console.WriteLine("Race events:");
 
@@ -54,7 +55,7 @@
                 if (finishRace == firstCar)
                 {
 
-                    var time = Event.SecondsToMinutes(car1.TotalTime);
+                    var time = Tools.SecondsToMinutes(car1.TotalTime);
 
                     carsFinished++;
 
@@ -64,7 +65,7 @@
                 }
                 else if (finishRace == secondCar)
                 {
-                    var time = Event.SecondsToMinutes(car2.TotalTime);
+                    var time = Tools.SecondsToMinutes(car2.TotalTime);
            
                     carsFinished++;
 
@@ -128,12 +129,10 @@
 
         public async static Task RaceStatus(List<Car> cars)
         {
-            Console.SetCursorPosition(0, 10);
+            Console.SetCursorPosition(0, 15);
 
             await Task.Delay(1);
 
-            ClearCurrentConsoleLine();
-            Console.WriteLine(cars[0].TotalTime);
 
             foreach (Car car in cars)
             {
@@ -223,7 +222,7 @@
                             //Run out of fuel 30sek (Risk: 2%)
 
                             string newEvent = "ran out of fuel";
-                            Event.TimeOut(car, newEvent, 30);
+                            Tools.TimeOut(car, newEvent, 30);
                             car.LastEvent = newEvent;
 
                             break;
@@ -231,7 +230,7 @@
                             //If number is 1 or 2
                             //Flat tire (Risk: 4%)
 
-                            Event.TimeOut(car, "got flat tire", 20);
+                            Tools.TimeOut(car, "got flat tire", 20);
                             car.LastEvent = "Flat tire";
 
                             break;
@@ -239,7 +238,7 @@
                             // If number is between 3 and 7
                             //Bird strike (Risk: 10%)
 
-                            Event.TimeOut(car, "got bird strike", 10);
+                            Tools.TimeOut(car, "got bird strike", 10);
                             car.LastEvent = "Bird strike";
 
                             break;

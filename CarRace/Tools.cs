@@ -6,20 +6,26 @@ using System.Threading.Tasks;
 
 namespace CarRace
 {
-    internal class Event
+    internal class Tools
     {
-        
+
         public static async Task TimeOut(Car car, string eventDesc, int Time)
         {
+            
             decimal temp = car.CurrentSpeed;
-            int timeFactor = 1;
+            int timeFactor = 10;
+
+            
 
             car.CurrentSpeed = 0;
 
             var time = SecondsToMinutes(car.TotalTime);
 
             Console.WriteLine($"{car.CarName} {eventDesc} at {time.min}:{time.sec} minutes");
+
             await Task.Delay((Time * 1000) / timeFactor);
+            
+            
             car.CurrentSpeed = temp;
 
         }
@@ -32,7 +38,6 @@ namespace CarRace
             int ss = timeSpan.Seconds;
 
             return (mm, ss);
-
         }
     
     }
